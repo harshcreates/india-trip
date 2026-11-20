@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="India trip">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16130f" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>India trip</title>
+<style>
+:root{color-scheme:light dark;--bg:#f6f3ee;--card:#fff;--ink:#1d1a16;--soft:#6d665c;--line:#e7e1d7;--mari:#b97800;--mariInk:#fff;--chip:#f1ece4;--chipOn:#1d1a16;--chipOnInk:#fff;--ok:#2f7a4a;--warn:#a35a00;--warnBg:#fff1db}
+@media (prefers-color-scheme:dark){:root{--bg:#16130f;--card:#211c17;--ink:#f0eae0;--soft:#a69d90;--line:#352e26;--mari:#f0b43c;--mariInk:#1a1300;--chip:#2c261f;--chipOn:#f0eae0;--chipOnInk:#16130f;--ok:#7ccf99;--warn:#f0b43c;--warnBg:#3a2a0b}}
+*{box-sizing:border-box;min-width:0;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif}
+body{padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);overflow-x:clip}
+.wrap{max-width:520px;margin:0 auto;padding:12px 16px calc(110px + env(safe-area-inset-bottom))}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--mari);outline-offset:2px}
+
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:6px 2px 14px}
+.label{font-size:14px;color:var(--soft);margin:0}
+.total{font-size:34px;font-weight:700;letter-spacing:-0.02em;margin:0;line-height:1.1;font-variant-numeric:tabular-nums}
+.sub{margin:4px 0 0;font-size:15px;color:var(--soft)}
+.city{color:var(--ink);font-weight:600;padding:2px 0;min-height:32px}
+.city::after{content:" \25BE";color:var(--soft);font-weight:400}
+.menu-btn{width:44px;height:44px;border-radius:50%;background:var(--card);border:1px solid var(--line);display:grid;place-items:center;flex:none}
+.menu-btn svg{width:20px;height:20px}
+.status{display:flex;align-items:center;gap:10px;margin:0 0 12px;padding:10px 14px;border-radius:12px;background:var(--warnBg);color:var(--warn);font-size:15px}
+.status.ok{background:transparent;color:var(--soft);padding:0 2px;margin:-6px 0 12px}
+.status b{font-weight:600}
+.status button{margin-left:auto;font-weight:600;color:var(--warn);min-height:36px;padding:0 4px}
+
+.card{background:var(--card);border-radius:18px;padding:16px;border:1px solid var(--line)}
+.amount{display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line);padding-bottom:10px}
+.cur{flex:none;width:52px;height:52px;border-radius:14px;background:var(--chip);font-size:26px;font-weight:600}
+#amount{flex:1;font:700 38px/1.1 -apple-system,system-ui,sans-serif;border:0;background:none;color:var(--ink);padding:6px 0;width:100%;font-variant-numeric:tabular-nums}
+#amount::placeholder{color:var(--line)}
+#what{width:100%;font-size:18px;border:0;background:none;color:var(--ink);padding:14px 0 12px;border-bottom:1px solid var(--line)}
+#what::placeholder{color:var(--soft)}
+.err{color:#c4322a;font-size:14px;margin:6px 0 0;display:none}
+.err.show{display:block}
+.group{margin-top:14px}
+.group h2{font-size:13px;font-weight:600;color:var(--soft);margin:0 0 8px;letter-spacing:.01em}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:40px;padding:8px 14px;border-radius:999px;background:var(--chip);font-size:16px;line-height:1.2}
+.chip[aria-pressed=true]{background:var(--chipOn);color:var(--chipOnInk);font-weight:600}
+.chip.add{background:none;border:1px dashed var(--line);color:var(--soft)}
+.typed{display:none;margin-top:8px;gap:8px}
+.typed.show{display:flex}
+.typed input{flex:1;font-size:16px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.typed button{padding:0 14px;border-radius:10px;background:var(--chip);font-weight:600;min-height:44px}
+
+.go{position:fixed;left:0;right:0;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(to top,var(--bg) 70%,transparent)}
+.go button{display:block;width:100%;max-width:488px;margin:0 auto;min-height:56px;border-radius:16px;background:var(--mari);color:var(--mariInk);font-size:19px;font-weight:700}
+
+.recent{margin-top:22px}
+.recent h2{font-size:15px;font-weight:600;margin:0 0 6px;padding:0 2px}
+.row{display:flex;gap:12px;align-items:baseline;padding:11px 2px;border-bottom:1px solid var(--line)}
+.row .amt{flex:none;width:88px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.row .desc{flex:1;overflow:hidden}
+.row .desc span{display:block;font-size:14px;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .st{flex:none;font-size:13px;color:var(--ok)}
+.row .st.wait{color:var(--warn)}
+.empty{color:var(--soft);font-size:15px;padding:8px 2px}
+
+.toast{position:fixed;left:16px;right:16px;bottom:calc(84px + env(safe-area-inset-bottom));max-width:488px;margin:0 auto;background:var(--chipOn);color:var(--chipOnInk);padding:12px 16px;border-radius:14px;font-size:15px;opacity:0;transform:translateY(8px);pointer-events:none}
+.toast.show{opacity:1;transform:none}
+@media (prefers-reduced-motion:no-preference){.toast{transition:opacity .2s,transform .2s}}
+
+dialog{border:0;border-radius:20px;padding:0;width:min(92vw,440px);background:var(--card);color:var(--ink)}
+dialog::backdrop{background:rgba(0,0,0,.4)}
+.sheet{padding:18px}
+.sheet h2{font-size:18px;margin:0 0 4px}
+.sheet p{color:var(--soft);font-size:15px;margin:0 0 14px}
+.list button{display:block;width:100%;text-align:left;padding:14px 4px;border-bottom:1px solid var(--line);min-height:48px}
+.list button:last-child{border-bottom:0}
+.sheet textarea{width:100%;min-height:96px;font:14px/1.4 ui-monospace,monospace;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.primary{display:block;width:100%;margin-top:12px;min-height:50px;border-radius:14px;background:var(--mari);color:var(--mariInk);font-weight:700}
+.plain{display:block;width:100%;margin-top:8px;min-height:44px;color:var(--soft)}
+
+.setup{padding:40px 6px}
+.setup h1{font-size:30px;line-height:1.1;margin:0 0 10px}
+.setup p{color:var(--soft);margin:0 0 14px}
+.setup ol{padding-left:22px;margin:0 0 18px}
+.setup li{margin-bottom:8px}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <section id="setup" class="setup hide">
+    <h1>India trip</h1>
+    <div id="install" class="hide">
+      <p>Add this to your home screen so it opens like an app and keeps working without signal.</p>
+      <ol>
+        <li>Tap <b>Copy setup code</b> below.</li>
+        <li>Tap the Share button in Safari, then <b>Add to Home Screen</b>.</li>
+        <li>Open India trip from your home screen. If it asks, paste the code.</li>
+      </ol>
+      <button class="primary" id="copyCode" type="button">Copy setup code</button>
+      <button class="plain" id="useHere" type="button">Use it in the browser instead</button>
+    </div>
+    <div id="paste">
+      <p>Paste the setup code you were sent.</p>
+      <textarea id="code" aria-label="Setup code" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
+      <p class="err" id="codeErr">That code didn't work. Copy the whole thing and try again.</p>
+      <button class="primary" id="saveCode" type="button">Save</button>
+    </div>
+  </section>
+
+  <main id="app" class="hide">
+    <header class="top">
+      <div>
+        <p class="label">India trip</p>
+        <p class="total" id="total">₹0</p>
+        <p class="sub"><span id="today">Today ₹0</span> · <button class="city" id="cityBtn" type="button">Set city</button></p>
+      </div>
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="More">
+        <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><circle cx="4" cy="10" r="1.8"/><circle cx="10" cy="10" r="1.8"/><circle cx="16" cy="10" r="1.8"/></svg>
+      </button>
+    </header>
+
+    <div class="status ok" id="status">All sent</div>
+
+    <form class="card" id="form" autocomplete="off">
+      <div class="amount">
+        <button class="cur" id="cur" type="button" aria-label="Switch currency">₹</button>
+        <input id="amount" inputmode="decimal" enterkeyhint="next" placeholder="0" aria-label="Amount">
+      </div>
+      <p class="err" id="amountErr">Enter an amount.</p>
+      <input id="what" enterkeyhint="done" placeholder="What was it?" aria-label="What was it">
+      <div class="group"><h2>Who paid</h2><div class="chips" id="who"></div><div class="typed" id="whoTyped"><input aria-label="Name"><button type="button">Add</button></div></div>
+      <div class="group"><h2>Paid with</h2><div class="chips" id="paidWith"></div><div class="typed" id="paidWithTyped"><input aria-label="Card or account"><button type="button">Add</button></div></div>
+      <div class="group"><h2>Category</h2><div class="chips" id="category"></div></div>
+    </form>
+
+    <section class="recent">
+      <h2>On this phone</h2>
+      <div id="recent"></div>
+    </section>
+
+    <div class="go"><button id="addBtn" type="button">Add charge</button></div>
+  </main>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<dialog id="menu"><div class="sheet">
+  <h2>India trip</h2>
+  <p id="menuInfo"></p>
+  <div class="list">
+    <button type="button" data-act="sync">Send and refresh totals</button>
+    <button type="button" data-act="city">Change city</button>
+    <button type="button" data-act="copy">Copy log to paste to Claude</button>
+    <button type="button" data-act="reset">Set up again</button>
+  </div>
+  <button class="plain" type="button" data-act="close">Close</button>
+</div></dialog>
+
+<dialog id="cityDlg"><div class="sheet">
+  <h2>Which city are you in?</h2>
+  <p>New charges are tagged with it until you change it.</p>
+  <div class="chips" id="cityChips"></div>
+  <div class="typed show" id="cityTyped"><input aria-label="Another city" placeholder="Another city"><button type="button">Use</button></div>
+  <button class="plain" type="button" data-act="close">Close</button>
+</div></dialog>
+
+<script>
+{
+const STORE = 'indiaTrip.v1';
+const CATEGORIES = ['Food', 'Transport', 'Lodging', 'Shopping', 'Gifts', 'Phone & data', 'Temple & donations', 'Activities', 'Other'];
+const GUESS = [
+  ['Food', /dinner|lunch|breakfast|chai|tea|coffee|snack|food|restaurant|cafe|swiggy|zomato|dosa|idli|biryani|thali|sweets?|mithai|water|juice|coconut|ice ?cream|lassi|meal/i],
+  ['Transport', /auto|uber|ola|rapido|cab|taxi|metro|train|flight|bus|toll|petrol|diesel|fuel|parking|rickshaw|driver|ferry/i],
+  ['Lodging', /hotel|stay|room|airbnb|oyo|resort|homestay|lodge/i],
+  ['Phone & data', /airtel|jio|\bvi\b|sim|recharge|data|wi-?fi/i],
+  ['Temple & donations', /temple|mandir|puja|pooja|prasad|donation|dakshina|darshan|offering|flowers|hundi/i],
+  ['Gifts', /gift|shagun|present/i],
+  ['Shopping', /saree|sari|kurta|cloth|shoes|chappal|jewel|bangle|shop|mall|amazon|flipkart|market|tailor|book/i],
+  ['Activities', /ticket|tour|museum|entry|show|movie|boat|guide|spa|massage|park/i]
+];
+const $ = (id) => document.getElementById(id);
+
+let st = load();
+let form = { currency: '', who: '', paidWith: '', category: '', catTouched: false };
+let syncing = false;
+
+function load() {
+  try { return JSON.parse(localStorage.getItem(STORE)) || {}; } catch (e) { return {}; }
+}
+function save() {
+  try { localStorage.setItem(STORE, JSON.stringify(st)); } catch (e) { toast('Could not save on this phone'); }
+}
+function pad(n, l) { n = String(n); while (n.length < l) n = '0' + n; return n; }
+function ymd(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1, 2) + '-' + pad(d.getDate(), 2); }
+function stamp(d) { return ymd(d) + ' ' + pad(d.getHours(), 2) + ':' + pad(d.getMinutes(), 2); }
+function clock(d) { const h = d.getHours(); return ((h % 12) || 12) + ':' + pad(d.getMinutes(), 2) + (h < 12 ? ' am' : ' pm'); }
+function inr(n) {
+  const s = String(Math.round(Math.abs(Number(n) || 0)));
+  let head = s.slice(0, -3); const tail = s.slice(-3);
+  if (head) head = head.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',';
+  return (n < 0 ? '-' : '') + '₹' + head + tail;
+}
+function money(a, c) { return c === 'USD' ? '$' + a : inr(a); }
+function csv(v) { const s = String(v == null ? '' : v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+function list(key) {
+  const l = st.lists && st.lists[key];
+  if (l && l.length) return l;
+  if (key === 'who') return st.cfg && st.cfg.n ? [st.cfg.n] : [];
+  if (key === 'paidWith') return ['Cash', 'UPI'];
+  if (key === 'category') return CATEGORIES;
+  return [];
+}
+function guess(text, cats) {
+  for (const [c, re] of GUESS) if (re.test(text) && cats.includes(c)) return c;
+  return '';
+}
+
+let toastTimer;
+function toast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+// ---------- setup ----------
+function decode(code) {
+  try {
+    const s = code.trim().replace(/^.*#setup=/, '').replace(/-/g, '+').replace(/_/g, '/');
+    const json = decodeURIComponent(escape(atob(s)));
+    const c = JSON.parse(json);
+    if (!c.u || c.u.indexOf('https://script.google.com/') !== 0 || !c.k || !c.d) return null;
+    return c;
+  } catch (e) { return null; }
+}
+function applySetup(c) {
+  st.cfg = { u: c.u, k: c.k, n: c.n || '', d: c.d };
+  if (c.l) st.lists = Object.assign({}, c.l, st.lists || {});
+  if (typeof st.seq !== 'number') st.seq = 0;
+  if (!Array.isArray(st.pending)) st.pending = [];
+  if (!Array.isArray(st.log)) st.log = [];
+  st.last = st.last || {};
+  save();
+}
+const standalone = window.navigator.standalone === true || matchMedia('(display-mode: standalone)').matches;
+const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+const hashCode = location.hash.indexOf('#setup=') === 0 ? location.hash : '';
+
+function showSetup() {
+  $('app').classList.add('hide');
+  $('setup').classList.remove('hide');
+  const offerInstall = hashCode && isIOS && !standalone;
+  $('install').classList.toggle('hide', !offerInstall);
+  $('paste').classList.toggle('hide', !!offerInstall);
+}
+$('copyCode').addEventListener('click', () => {
+  const code = hashCode.slice(7);
+  navigator.clipboard.writeText(code).then(() => toast('Copied. Now add it to your home screen.'), () => toast('Copy failed. Press and hold the address bar to copy the link instead.'));
+});
+$('useHere').addEventListener('click', () => { const c = decode(hashCode); if (c) { applySetup(c); start(); } });
+$('saveCode').addEventListener('click', () => {
+  const c = decode($('code').value);
+  $('codeErr').classList.toggle('show', !c);
+  if (c) { applySetup(c); start(); }
+});
+$('code').addEventListener('input', () => $('codeErr').classList.remove('show'));
+
+// ---------- app ----------
+function chips(id, options, selected, onPick, extra) {
+  const box = $(id);
+  box.textContent = '';
+  options.forEach((o) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip';
+    b.textContent = o;
+    b.setAttribute('aria-pressed', String(o === selected));
+    b.addEventListener('click', () => onPick(o === selected && extra && extra.toggle ? '' : o));
+    box.appendChild(b);
+  });
+  if (extra && extra.typed) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip add';
+    b.textContent = 'Other';
+    b.addEventListener('click', () => { const t = $(id + 'Typed'); t.classList.add('show'); t.querySelector('input').focus(); });
+    box.appendChild(b);
+  }
+}
+function withFirst(options, first) {
+  if (!first) return options.slice();
+  return [first].concat(options.filter((o) => o !== first));
+}
+function renderForm() {
+  chips('who', withFirst(list('who'), st.cfg.n), form.who, (v) => { form.who = v; renderForm(); }, { typed: true });
+  chips('paidWith', withFirst(list('paidWith'), st.last.paidWith), form.paidWith, (v) => { form.paidWith = v; renderForm(); }, { typed: true, toggle: true });
+  chips('category', list('category'), form.category, (v) => { form.category = v; form.catTouched = true; renderForm(); }, { toggle: true });
+  $('cur').textContent = form.currency === 'USD' ? '$' : '₹';
+  const a = parseFloat(($('amount').value || '').replace(/,/g, ''));
+  $('addBtn').textContent = a > 0 ? 'Add ' + money(a, form.currency) : 'Add charge';
+}
+function renderTop() {
+  const t = st.totals;
+  $('total').textContent = t ? inr(t.trip) : '₹0';
+  $('today').textContent = 'Today ' + (t && t.date === ymd(new Date()) ? inr(t.today) : '₹0');
+  $('cityBtn').textContent = st.city || 'Set city';
+  const s = $('status');
+  if (st.pending.length) {
+    const w = st.pending.reduce((a, p) => a + (p.currency === 'USD' ? 0 : Number(p.amount) || 0), 0);
+    s.className = 'status';
+    s.innerHTML = '';
+    const b = document.createElement('b');
+    b.textContent = st.pending.length + ' waiting to send';
+    s.appendChild(b);
+    s.appendChild(document.createTextNode(' (' + inr(w) + ')'));
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = syncing ? 'Sending…' : 'Send now';
+    btn.addEventListener('click', () => sync('manual'));
+    s.appendChild(btn);
+  } else {
+    s.className = 'status ok';
+    s.textContent = 'All sent' + (st.syncedAt ? ' · updated ' + st.syncedAt : '');
+  }
+}
+function renderRecent() {
+  const box = $('recent');
+  box.textContent = '';
+  const waiting = new Set(st.pending.map((p) => p.id));
+  const items = st.log.slice(-8).reverse();
+  if (!items.length) {
+    const p = document.createElement('p');
+    p.className = 'empty';
+    p.textContent = 'Charges you add here show up in this list.';
+    box.appendChild(p);
+    return;
+  }
+  items.forEach((e) => {
+    const row = document.createElement('div');
+    row.className = 'row';
+    const amt = document.createElement('div'); amt.className = 'amt'; amt.textContent = money(e.amount, e.currency);
+    const desc = document.createElement('div'); desc.className = 'desc';
+    desc.appendChild(document.createTextNode(e.charge));
+    const meta = document.createElement('span');
+    meta.textContent = [e.date.slice(5).replace('-', '/'), e.who, e.paidWith, e.city].filter(Boolean).join(' · ');
+    desc.appendChild(meta);
+    const s = document.createElement('div');
+    const w = waiting.has(e.id);
+    s.className = 'st' + (w ? ' wait' : '');
+    s.textContent = w ? 'Waiting' : 'Sent';
+    row.append(amt, desc, s);
+    box.appendChild(row);
+  });
+}
+function render() { renderTop(); renderForm(); renderRecent(); }
+
+function resetForm() {
+  $('amount').value = '';
+  $('what').value = '';
+  form = { currency: '', who: st.cfg.n || st.last.who || '', paidWith: st.last.paidWith || '', category: '', catTouched: false };
+}
+
+$('amount').addEventListener('input', () => { $('amountErr').classList.remove('show'); renderForm(); });
+$('what').addEventListener('input', () => {
+  if (!form.catTouched) { form.category = guess($('what').value, list('category')); renderForm(); }
+});
+$('amount').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); $('what').focus(); } });
+$('what').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); $('what').blur(); } });
+$('cur').addEventListener('click', () => { form.currency = form.currency === 'USD' ? '' : 'USD'; renderForm(); });
+['who', 'paidWith'].forEach((key) => {
+  const box = $(key + 'Typed');
+  const input = box.querySelector('input');
+  const use = () => {
+    const v = input.value.trim();
+    if (!v) return;
+    form[key] = v;
+    st.lists = st.lists || {};
+    const l = list(key).slice();
+    if (!l.includes(v)) { l.push(v); st.lists[key] = l; save(); }
+    input.value = '';
+    box.classList.remove('show');
+    renderForm();
+  };
+  box.querySelector('button').addEventListener('click', use);
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); use(); } });
+});
+
+$('addBtn').addEventListener('click', () => {
+  const amount = parseFloat(($('amount').value || '').replace(/,/g, ''));
+  if (!(amount > 0)) { $('amountErr').classList.add('show'); $('amount').focus(); return; }
+  if (!st.city) { openCity(); toast('Pick your city first'); return; }
+  const now = new Date();
+  st.seq = (st.seq || 0) + 1;
+  const what = $('what').value.trim();
+  const entry = {
+    id: st.cfg.d + '-' + pad(st.seq, 4) + '-' + Math.random().toString(36).slice(2, 6),
+    seq: st.seq,
+    device: st.cfg.d,
+    date: ymd(now),
+    recordedAt: stamp(now),
+    amount: Math.round(amount * 100) / 100,
+    currency: form.currency,
+    charge: what ? what.charAt(0).toUpperCase() + what.slice(1) : (form.category || 'Charge'),
+    who: form.who,
+    paidWith: form.paidWith,
+    category: form.category,
+    city: st.city
+  };
+  st.log.push(entry);
+  st.pending.push(entry);
+  if (form.paidWith) st.last.paidWith = form.paidWith;
+  if (form.who) st.last.who = form.who;
+  save();
+  toast('Saved ' + money(entry.amount, entry.currency) + ' · ' + entry.charge);
+  resetForm();
+  render();
+  sync('auto');
+});
+
+// mode: 'auto' sends anything waiting; 'refresh' also updates totals; 'manual' does both and reports failures.
+async function sync(mode) {
+  const force = mode !== 'auto';
+  if (syncing || !st.cfg) return;
+  if (!st.pending.length && !force) return;
+  syncing = true;
+  renderTop();
+  const had = st.pending.length;
+  try {
+    const res = st.pending.length
+      ? await fetch(st.cfg.u, { method: 'POST', body: JSON.stringify({ key: st.cfg.k, device: st.cfg.d, entries: st.pending }) })
+      : await fetch(st.cfg.u + (st.cfg.u.indexOf('?') < 0 ? '?' : '&') + 'key=' + encodeURIComponent(st.cfg.k));
+    const data = await res.json();
+    if (!data.ok) throw new Error('The sheet refused it: ' + data.error);
+    const done = new Set();
+    (data.results || []).forEach((r) => {
+      const s = String(r.status);
+      if (s === 'added' || s === 'duplicate' || s.indexOf('rejected') === 0) done.add(r.id);
+    });
+    st.pending = st.pending.filter((p) => !done.has(p.id));
+    if (data.lists) st.lists = data.lists;
+    if (data.totals) st.totals = data.totals;
+    st.lastSync = stamp(new Date());
+    st.syncedAt = clock(new Date());
+    st.lastError = st.pending.length ? 'The sheet could not add ' + st.pending.length + '. Will retry.' : '';
+    if (had && !st.pending.length) toast('Sent to the sheet');
+    else if (mode === 'manual' && !had) toast('Totals updated');
+  } catch (e) {
+    st.lastError = navigator.onLine === false ? 'No connection' : (e && e.message && e.message.indexOf('sheet') >= 0 ? e.message : 'Could not reach the sheet');
+    if (mode === 'manual') toast(st.lastError + '. Your charges are saved here.');
+  } finally {
+    syncing = false;
+    save();
+    render();
+  }
+}
+
+// ---------- menu and city ----------
+function openCity() {
+  const cities = list('city');
+  chips('cityChips', cities, st.city, (v) => { setCity(v); }, null);
+  $('cityDlg').showModal();
+}
+function setCity(v) {
+  st.city = v;
+  save();
+  $('cityDlg').close();
+  renderTop();
+  toast('New charges will be tagged ' + v);
+}
+$('cityBtn').addEventListener('click', openCity);
+(() => {
+  const box = $('cityTyped');
+  const input = box.querySelector('input');
+  const use = () => { const v = input.value.trim(); if (v) { input.value = ''; setCity(v); } };
+  box.querySelector('button').addEventListener('click', use);
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); use(); } });
+})();
+$('menuBtn').addEventListener('click', () => {
+  $('menuInfo').textContent = 'Last sent ' + (st.lastSync || 'never') + (st.lastError ? '. ' + st.lastError : '') + '. ' + st.log.length + ' charges on this phone.';
+  $('menu').showModal();
+});
+document.querySelectorAll('[data-act]').forEach((b) => b.addEventListener('click', () => {
+  const act = b.dataset.act;
+  const dlg = b.closest('dialog');
+  if (dlg) dlg.close();
+  if (act === 'sync') sync('manual');
+  if (act === 'city') openCity();
+  if (act === 'copy') {
+    const head = 'id,seq,date,recorded at,amount,currency,charge,who paid,paid with,category,city';
+    const lines = st.log.map((e) => [e.id, e.seq, e.date, e.recordedAt, e.amount, e.currency || 'INR', e.charge, e.who, e.paidWith, e.category, e.city].map(csv).join(','));
+    const text = 'Trip log from ' + (st.cfg.n ? st.cfg.n + "'s iPhone" : 'the web page') + ', ' + stamp(new Date()) + '\nWaiting to send: ' + (st.pending.map((p) => p.id).join(' ') || 'none') + '\n' + head + '\n' + lines.join('\n');
+    navigator.clipboard.writeText(text).then(() => toast('Copied ' + lines.length + ' charges. Paste them in Claude.'), () => toast('Copy failed'));
+  }
+  if (act === 'reset') { st.cfg = null; save(); showSetup(); $('install').classList.add('hide'); $('paste').classList.remove('hide'); }
+}));
+
+function start() {
+  $('setup').classList.add('hide');
+  $('app').classList.remove('hide');
+  st.pending = st.pending || [];
+  st.log = st.log || [];
+  st.last = st.last || {};
+  resetForm();
+  render();
+  if (!st.city) openCity();
+  sync('refresh');
+}
+
+window.addEventListener('online', () => sync('auto'));
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') sync('refresh'); });
+setInterval(() => sync('auto'), 60000);
+
+if (!st.cfg && hashCode && (standalone || !isIOS)) { const c = decode(hashCode); if (c) applySetup(c); }
+if (st.cfg) start(); else showSetup();
+
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>
